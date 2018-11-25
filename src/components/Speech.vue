@@ -72,7 +72,7 @@
         result: false,
         resultError: false,
         textResult: "",
-        apiKey: '', //api key
+        apiKey: "AIzaSyCNJF83fwI3sViIYLP7Swwzrt16e6MLVrk", //api key
         selected: 'ko-KR',
         items: [{
             text: 'Afrikaans (Suid-Afrika)',
