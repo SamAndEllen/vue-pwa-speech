@@ -6,9 +6,7 @@
       <v-card color="grey lighten-2">
         <v-card-title primary-title>
           <div>
-            <span>문재인 대통령은 6일 "우선 7월과 8월 두 달간의 가정용 전기요금에 대해 한시적 누진제 완화와 저소득
-      층과 사회복지시설 등에 대한 전기요금 할인 확대 등 전기요금 부담 경감 방안을 조속히 확정해 7월분
-      전기요금 고지부터 시행해주기 바란다"고 말했다.</span>
+            <span>{{question}}</span>
           </div>
         </v-card-title>
       </v-card>
@@ -84,7 +82,8 @@
             "sampleRateHertz": 44100,
             "languageCode": null
           }
-        }
+        },
+        question: '',
       }
     },
     methods: {
@@ -162,6 +161,9 @@
       }, function(e) {
         console.log('No live audio input: ' + e);
       });
+
+      this.question = this.$route.query.question;
+      // 문재인 대통령은 6일 우선 7월과 8월 두 달간의 가정용 전기요금에 대해 한시적 누진제 완화와 저소득층과 사회복지시설 등에 대한 전기요금 할인 확대 등 전기요금 부담 경감 방안을 조속히 확정해 7월분 전기요금 고지부터 시행해주기 바란다고 말했다.
     }
   }
 </script>
