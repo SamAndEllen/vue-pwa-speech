@@ -1,11 +1,11 @@
 <template>
        <v-app id="app" standalone>
-        <v-toolbar fixed>
+        <v-toolbar>
              <v-container>
             <v-toolbar-title class="blue--text">Vue Speech</v-toolbar-title>
             </v-container>
         </v-toolbar>
-        <main>
+        <main class="mt-4">
             <v-container>
                <router-view></router-view>
             </v-container>

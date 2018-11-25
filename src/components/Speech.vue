@@ -72,8 +72,8 @@
         result: false,
         resultError: false,
         textResult: "",
-        apiKey: "", //api key
-        selected: 'en-US',
+        apiKey: '', //api key
+        selected: 'ko-KR',
         items: [{
             text: 'Afrikaans (Suid-Afrika)',
             value: 'af-ZA'
