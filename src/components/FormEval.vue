@@ -38,8 +38,7 @@
     <v-flex xs12 class="mt-5">
       <p class="headline font700">[ 한국어 받아쓰기 평가 ]</p>
       <p class="subheading font700">1. 다음 녹음을 들으면서 그 내용을 입력(타이핑)하시오.</p>
-      <button type="submit" class="btn btn-success" @click="greet">Greet</button>
-      <v-btn block round color="primary" dark>
+      <v-btn block round color="primary" dark @click="questionSpeech">
         <v-icon left>mic</v-icon>듣기평가 버튼 (들으면서 아래 박스에 타이핑 하세요)
       </v-btn>
       <v-layout row>      
@@ -85,23 +84,19 @@
           }
         },
         question: '',
-        isLoading: true,
-        name: '',
-        selectedVoice: 13,
         synth: window.speechSynthesis,
         voiceList: [],
-        greetingSpeech: new window.SpeechSynthesisUtterance(),
+        speech: new window.SpeechSynthesisUtterance(),
       }
     },
     methods: {
-      greet () {
-        // it should be 'craic', but it doesn't sound right
-        this.greetingSpeech.text = this.question;
+      questionSpeech() {
+        this.speech.text = this.question;
         this.voiceList = this.synth.getVoices();
 
-        this.greetingSpeech.voice = this.voiceList[this.selectedVoice];
+        this.speech.voice = this.voiceList[13];
 
-        this.synth.speak(this.greetingSpeech);
+        this.synth.speak(this.speech);
       },
       startUserMedia(stream) {
         const input = audio_context.createMediaStreamSource(stream);
