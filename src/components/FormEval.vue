@@ -83,7 +83,7 @@
           },
           "config": {
             "encoding": "LINEAR16",
-            "sampleRateHertz": 44100,
+            "sampleRateHertz": 48000,
             "languageCode": null
           }
         },
@@ -110,6 +110,7 @@
       },
       startRecording() {
         // Start Recording
+        recorder.clear();
         recorder && recorder.record();
         this.result = false;
         this.btn = false;
@@ -123,7 +124,6 @@
         this.loader = true;
         // create WAV download link using audio data blob
         this.processRecording();
-        recorder.clear();
         this.createDownloadLink();
       },
       createDownloadLink() {
@@ -146,6 +146,7 @@
 
           li.appendChild(bt);
         });
+        
       },
       processRecording() {
         const vm = this;
