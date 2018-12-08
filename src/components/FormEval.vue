@@ -1,6 +1,6 @@
 <template>
   <v-layout row wrap class="noto-sans">
-    <v-flex xs12>
+    <v-flex xs12 class="mb-4">
       <p class="headline font700">[ 한국어 읽기(올바르게 발음하기) 평가 ]</p>
       <p class="subheading font700">1. 아래의 한국어 문장을 (필요하면 몇 번 들어본 후) 올바르게 발음하면서 큰소리로 읽으시오.</p>
       <v-card color="grey lighten-2">
@@ -10,18 +10,32 @@
           </div>
         </v-card-title>
       </v-card>
-      <v-btn v-show="btn" @click.native="startRecording" block round color="primary" dark>
-        <v-icon left>mic</v-icon>읽기평가 버튼 (위의 문장을 녹음하세요)
+    </v-flex>
+    <v-flex xs5>
+      <v-btn block round color="primary" dark @click="questionSpeech">
+        <v-icon left>mic</v-icon>원본 듣기연습 버튼
       </v-btn>
+    </v-flex>
+    <v-flex xs7></v-flex>
+    <v-flex xs5><br />
+      <v-btn v-show="!btnStop" @click.native="startRecording" block round color="primary" dark>
+        <v-icon left>mic</v-icon>읽기평가 버튼 (위의 문장을 녹음하세요)
+      </v-btn>      
       <v-btn v-show="btnStop" @click.native="stopRecording" block round color="error" dark>
         <v-icon left>stop</v-icon> Stop
       </v-btn>
-      </br>
     </v-flex>
-    <v-flex xs12 class="mb-5">
-      <div v-show="loader" class="text-xs-center">
+    <v-flex xs1></v-flex>
+    <v-flex xs6>
+      <strong>[녹음파일 듣기 버튼]</strong>
+      <audio controls id="reload"></audio>
+    </v-flex>
+    <v-flex v-show="loader" xs12>
+      <div class="text-xs-center">
         <v-progress-circular indeterminate v-bind:size="100" v-bind:width="3" class="orange--text"></v-progress-circular>
       </div>
+    </v-flex>
+    <v-flex v-show="result || resultError" xs12 class="mb-5">
       <v-card v-show="result" color="darken-2 orange--text">
         <h4 class="text-xs-center">{{textResult}}</h4>
       </v-card>
@@ -33,7 +47,6 @@
           <v-btn @click.native="redirectError" flat dark>Try Again</v-btn>
         </v-card-actions>
       </v-card>
-      <ul id="recordingslist"></ul>
     </v-flex>
 
     <v-flex xs12 class="mt-5">
@@ -74,6 +87,7 @@
         loader: false,
         result: false,
         resultError: false,
+        audioSrc: "",
         textResult: "",
         apiKey: 'AIzaSyCNJF83fwI3sViIYLP7Swwzrt16e6MLVrk', //api key
         selected: 'ko-KR',        
@@ -109,8 +123,13 @@
         // Recorder initialised
       },
       startRecording() {
-        // Start Recording
+        // Clear Recording        
         recorder.clear();
+        const au = document.getElementById('reload');
+        au.src = '';
+        // Start Recording
+        this.result = false;
+        this.resultError = false;
         recorder && recorder.record();
         this.result = false;
         this.btn = false;
@@ -127,32 +146,19 @@
         this.createDownloadLink();
       },
       createDownloadLink() {
+        const au = document.getElementById('reload');
+        au.src = '';
         recorder && recorder.exportWAV(function(blob) {
           const url = URL.createObjectURL(blob);
-          const li = document.createElement('li');
-          const au = document.createElement('audio');
-          const hf = document.createElement('a');
-          const bt = document.createElement('button');
+          const au = document.getElementById('reload');
         
           au.controls = true;
           au.src = url;
-          hf.href = url;
-          hf.download = new Date().toISOString() + '.wav';
-          hf.innerHTML = hf.download;
-          li.appendChild(au);
-          li.appendChild(hf);
-          recordingslist.appendChild(li);
-          bt.textContent = "Send post";
-
-          li.appendChild(bt);
         });
-        
       },
       processRecording() {
         const vm = this;
 
-        console.log(recorder);
-  
         recorder && recorder.exportWAV(function(blob) {
           var reader = new window.FileReader();
           reader.readAsDataURL(blob);
@@ -182,7 +188,7 @@
       }
     },
     created() {
-      this.$emit('update:headtitle', '총괄 평가');
+      this.$emit('update:headtitle', '형성평가');
       try {
         window.AudioContext = window.AudioContext || window.webkitAudioContext;
         navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
@@ -204,7 +210,6 @@
       });
 
       this.question = this.$route.query.question;
-      // 문재인 대통령은 6일 우선 7월과 8월 두 달간의 가정용 전기요금에 대해 한시적 누진제 완화와 저소득층과 사회복지시설 등에 대한 전기요금 할인 확대 등 전기요금 부담 경감 방안을 조속히 확정해 7월분 전기요금 고지부터 시행해주기 바란다고 말했다.
     }
   }
 </script>
@@ -239,5 +244,9 @@
     to {
       transform: translateY(0);
     }
+  }
+
+  audio {
+    width: 100%;
   }
 </style>
