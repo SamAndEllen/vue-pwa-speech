@@ -209,7 +209,7 @@
         console.log('No live audio input: ' + e);
       });
 
-      this.question = this.$route.query.question;
+      this.question = this.$route.query.ctx;
     }
   }
 </script>
