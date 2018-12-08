@@ -36,8 +36,8 @@
       </div>
     </v-flex>
     <v-flex v-show="result || resultError" xs12 class="mb-5">
-      <v-card v-show="result" color="darken-2 orange--text">
-        <h4 class="text-xs-center">{{textResult}}</h4>
+      <v-card v-show="result" color="darken-2">
+        <div class="result-text text-xs-center">{{textResult}}</div>
       </v-card>
       <v-card v-show="resultError" color="red darken-3 white--text">
         <v-card-title primary-title>
@@ -248,5 +248,11 @@
 
   audio {
     width: 100%;
+  }
+
+  .result-text {
+    font-weight: 700;
+    font-size: 18px;
+    padding: 10px;
   }
 </style>
