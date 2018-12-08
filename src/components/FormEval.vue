@@ -32,7 +32,8 @@
         <v-card-actions>
           <v-btn @click.native="redirectError" flat dark>Try Again</v-btn>
         </v-card-actions>
-      </v-card>  
+      </v-card>
+      <ul id="recordingslist"></ul>
     </v-flex>
 
     <v-flex xs12 class="mt-5">
@@ -63,6 +64,9 @@
   import axios from 'axios';
   
   export default {
+    props: {
+      headtitle: '',
+    },
     data() {
       return {
         btn: true,
@@ -120,9 +124,33 @@
         // create WAV download link using audio data blob
         this.processRecording();
         recorder.clear();
+        this.createDownloadLink();
+      },
+      createDownloadLink() {
+        recorder && recorder.exportWAV(function(blob) {
+          const url = URL.createObjectURL(blob);
+          const li = document.createElement('li');
+          const au = document.createElement('audio');
+          const hf = document.createElement('a');
+          const bt = document.createElement('button');
+        
+          au.controls = true;
+          au.src = url;
+          hf.href = url;
+          hf.download = new Date().toISOString() + '.wav';
+          hf.innerHTML = hf.download;
+          li.appendChild(au);
+          li.appendChild(hf);
+          recordingslist.appendChild(li);
+          bt.textContent = "Send post";
+
+          li.appendChild(bt);
+        });
       },
       processRecording() {
         const vm = this;
+
+        console.log(recorder);
   
         recorder && recorder.exportWAV(function(blob) {
           var reader = new window.FileReader();
@@ -153,6 +181,7 @@
       }
     },
     created() {
+      this.$emit('update:headtitle', '총괄 평가');
       try {
         window.AudioContext = window.AudioContext || window.webkitAudioContext;
         navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
