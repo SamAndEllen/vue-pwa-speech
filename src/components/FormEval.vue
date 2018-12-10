@@ -166,8 +166,10 @@
           reader.onloadend = () => {
             const baseData = reader.result;
             const base64Data = baseData.replace("data:audio/wav;base64,", "");
+            console.log(base64Data);
             vm.data.audio.content = base64Data;
             vm.data.config.languageCode = vm.selected;
+            console.log(vm.data);
             axios.post(
               `https://speech.googleapis.com/v1/speech:recognize?key=${vm.apiKey}`,
               vm.data).then(response => {
