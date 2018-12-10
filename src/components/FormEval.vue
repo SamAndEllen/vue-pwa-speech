@@ -166,6 +166,7 @@
           reader.onloadend = () => {
             const baseData = reader.result;
             const base64Data = baseData.replace("data:audio/wav;base64,", "");
+            console.log(baseData);
             console.log(base64Data);
             vm.data.audio.content = base64Data;
             vm.data.config.languageCode = vm.selected;
