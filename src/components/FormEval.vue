@@ -144,7 +144,7 @@
         this.loader = true;
         // create WAV download link using audio data blob
         this.processRecording();
-        this.createDownloadLink();
+        //this.createDownloadLink();
       },
       createDownloadLink() {
         const au = document.getElementById('reload');
