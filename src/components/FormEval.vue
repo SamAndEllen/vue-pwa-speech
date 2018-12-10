@@ -177,6 +177,7 @@
               vm.loader = false;
               vm.result = true;
 
+              // 결과 표시
               let textHTML = '';
               for (let i = 0; i < vm.question.length; i += 1) {
                 const a = vm.question.substring(i, i+1);
@@ -203,11 +204,15 @@
     created() {
       this.$emit('update:headtitle', '형성평가');
       try {
-        window.AudioContext = window.AudioContext || window.webkitAudioContext;
+        const contextClass = (window.AudioContext ||
+        window.webkitAudioContext || 
+        window.mozAudioContext || 
+        window.oAudioContext || 
+        window.msAudioContext);
         navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
         window.URL = window.URL || window.webkitURL;
   
-        audio_context = new AudioContext;
+        audio_context = new contextClass();
         console.log('Audio context set up.');
         console.log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not present!'));
       } catch (e) {

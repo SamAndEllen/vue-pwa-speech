@@ -17,7 +17,7 @@
 export default {
     data() {
         return {
-            headtitle: '총괄 평가',
+            headtitle: '',
         }
     },
 }
