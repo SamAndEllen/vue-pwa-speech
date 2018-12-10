@@ -220,25 +220,58 @@
 
     audioRecorder = new Recorder( inputPoint );
 
-    zeroGain = audioContext.createGain();
+    zeroGain = audio_context.createGain();
     zeroGain.gain.value = 0.0;
     inputPoint.connect( zeroGain );
     zeroGain.connect( audioContext.destination );
     updateAnalysers();
+
+},
+ updateAnalysers(time) {
+    if (!analyserContext) {
+        var canvas = document.getElementById("analyser");
+        canvasWidth = canvas.width;
+        canvasHeight = canvas.height;
+        analyserContext = canvas.getContext('2d');
+    }
+
+    // analyzer draw code here
+    {
+        var SPACING = 3;
+        var BAR_WIDTH = 1;
+        var numBars = Math.round(canvasWidth / SPACING);
+        var freqByteData = new Uint8Array(analyserNode.frequencyBinCount);
+
+        analyserNode.getByteFrequencyData(freqByteData); 
+
+        analyserContext.clearRect(0, 0, canvasWidth, canvasHeight);
+        analyserContext.fillStyle = '#F6D565';
+        analyserContext.lineCap = 'round';
+        var multiplier = analyserNode.frequencyBinCount / numBars;
+
+        // Draw rectangle for each frequency bin.
+        for (var i = 0; i < numBars; ++i) {
+            var magnitude = 0;
+            var offset = Math.floor( i * multiplier );
+            // gotta sum/average the block, or we miss narrow-bandwidth spikes
+            for (var j = 0; j< multiplier; j++)
+                magnitude += freqByteData[offset + j];
+            magnitude = magnitude / multiplier;
+            var magnitude2 = freqByteData[i * multiplier];
+            analyserContext.fillStyle = "hsl( " + Math.round((i*360)/numBars) + ", 100%, 50%)";
+            analyserContext.fillRect(i * SPACING, canvasHeight, BAR_WIDTH, -magnitude);
+        }
+    }
+    
+    rafID = window.requestAnimationFrame( updateAnalysers );
 }
     },
     created() {
       this.$emit('update:headtitle', '형성평가');
       try {
-        const contextClass = (window.AudioContext ||
-        window.webkitAudioContext || 
-        window.mozAudioContext || 
-        window.oAudioContext || 
-        window.msAudioContext);
-        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
-        window.URL = window.URL || window.webkitURL;
+        window.AudioContext = window.AudioContext || window.webkitAudioContext;
   
-        audio_context = new contextClass();
+        audio_context = new AudioContext();
         console.log('Audio context set up.');
         console.log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not present!'));
       } catch (e) {
