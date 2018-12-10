@@ -223,13 +223,28 @@
         alert('No web audio support in this browser!');
       }
       const that = this;
-      navigator.getUserMedia({
-        audio: true
-      }, function(stream) {
-        that.startUserMedia(stream)
-      }, function(e) {
-        console.log('No live audio input: ' + e);
-      });
+      // navigator.getUserMedia({
+      //   audio: true
+      // }, function(stream) {
+      //   that.startUserMedia(stream)
+      // }, function(e) {
+      //   console.log('No live audio input: ' + e);
+      // });
+          navigator.getUserMedia(
+        {
+            "audio": {
+                "mandatory": {
+                    "googEchoCancellation": "false",
+                    "googAutoGainControl": "false",
+                    "googNoiseSuppression": "false",
+                    "googHighpassFilter": "false"
+                },
+                "optional": []
+            },
+        }, gotStream, function(e) {
+            alert('Error getting audio');
+            console.log(e);
+        });
 
       this.question = this.$route.query.ctx;
     }
