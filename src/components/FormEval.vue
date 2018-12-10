@@ -263,7 +263,7 @@
                 },
                 "optional": []
             },
-        }, gotStream, function(e) {
+        }, this.gotStream, function(e) {
             alert('Error getting audio');
             console.log(e);
         });
