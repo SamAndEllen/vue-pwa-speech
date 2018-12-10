@@ -37,7 +37,7 @@
     </v-flex>
     <v-flex v-show="result || resultError" xs12 class="mb-5">
       <v-card v-show="result" color="darken-2">
-        <div class="result-text text-xs-center">{{textResult}}</div>
+        <div class="result-text text-xs-center" v-html="textHTML"></div>
       </v-card>
       <v-card v-show="resultError" color="red darken-3 white--text">
         <v-card-title primary-title>
@@ -89,6 +89,7 @@
         resultError: false,
         audioSrc: "",
         textResult: "",
+        textHTML: '',
         apiKey: 'AIzaSyCNJF83fwI3sViIYLP7Swwzrt16e6MLVrk', //api key
         selected: 'ko-KR',        
         data: {
@@ -171,10 +172,22 @@
               `https://speech.googleapis.com/v1/speech:recognize?key=${vm.apiKey}`,
               vm.data).then(response => {
               const result = response.data.results[0].alternatives[0];
-              vm.textResult = result.transcript
+              vm.textResult = result.transcript;
               vm.btn = true;
               vm.loader = false;
               vm.result = true;
+
+              let textHTML = '';
+              for (let i = 0; i < vm.question.length; i += 1) {
+                const a = vm.question.substring(i, i+1);
+                const b = vm.textResult.substring(i, i+1);
+                if (a === b) textHTML += a;
+                else textHTML += `<span class='red'>${b}</span>`;
+              }
+
+              textHTML += `<span class='red'>${vm.textResult.substring(vm.question.length+1, vm.textResult.length)}</span>`;
+
+              this.textHTML = textHTML;
             }).catch(error => {
               vm.loader = false;
               vm.resultError = true;
