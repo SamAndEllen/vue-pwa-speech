@@ -161,6 +161,7 @@
         const vm = this;
 
         recorder && recorder.exportWAV(function(blob) {
+          console.log(blob);
           var reader = new window.FileReader();
           reader.readAsDataURL(blob);
           reader.onloadend = () => {
