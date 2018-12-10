@@ -205,16 +205,16 @@
         window.location.href = "http://localhost:8080/"
       },
       gotStream(stream) {
-    inputPoint = audioContext.createGain();
+    inputPoint = audio_context.createGain();
 
     // Create an AudioNode from the stream.
-    realAudioInput = audioContext.createMediaStreamSource(stream);
+    realAudioInput = audio_context.createMediaStreamSource(stream);
     audioInput = realAudioInput;
     audioInput.connect(inputPoint);
 
 //    audioInput = convertToMono( input );
 
-    analyserNode = audioContext.createAnalyser();
+    analyserNode = audio_context.createAnalyser();
     analyserNode.fftSize = 2048;
     inputPoint.connect( analyserNode );
 
@@ -223,7 +223,7 @@
     zeroGain = audio_context.createGain();
     zeroGain.gain.value = 0.0;
     inputPoint.connect( zeroGain );
-    zeroGain.connect( audioContext.destination );
+    zeroGain.connect( audio_context.destination );
     updateAnalysers();
 
 },
