@@ -124,6 +124,25 @@
         // Recorder initialised
       },
       startRecording() {
+        try {
+          window.AudioContext = window.AudioContext || window.webkitAudioContext;
+          navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
+          window.URL = window.URL || window.webkitURL;
+    
+          audio_context = new AudioContext;
+          console.log('Audio context set up.');
+          console.log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not present!'));
+        } catch (e) {
+          alert('No web audio support in this browser!');
+        }
+        const that = this;
+        navigator.getUserMedia({
+          audio: true
+        }, function(stream) {
+          that.startUserMedia(stream)
+        }, function(e) {
+          console.log('No live audio input: ' + e);
+        });
         // Clear Recording        
         recorder.clear();
         const au = document.getElementById('reload');
@@ -202,26 +221,6 @@
     },
     created() {
       this.$emit('update:headtitle', '형성평가');
-      try {
-        window.AudioContext = window.AudioContext || window.webkitAudioContext;
-        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
-        window.URL = window.URL || window.webkitURL;
-  
-        audio_context = new AudioContext;
-        console.log('Audio context set up.');
-        console.log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not present!'));
-      } catch (e) {
-        alert('No web audio support in this browser!');
-      }
-      const that = this;
-      navigator.getUserMedia({
-        audio: true
-      }, function(stream) {
-        that.startUserMedia(stream)
-      }, function(e) {
-        console.log('No live audio input: ' + e);
-      });
-
       this.question = this.$route.query.ctx;
     }
   }
