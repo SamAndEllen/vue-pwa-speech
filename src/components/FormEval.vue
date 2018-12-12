@@ -186,12 +186,12 @@
 
               this.textHTML = textHTML;
 
-              recorder.clear();
+              audio_context.close();
             }).catch(error => {
               vm.loader = false;
               vm.resultError = true;
               console.log("ERROR:" + error);
-              recorder.clear();
+              audio_context.close();
             })
           }
         });
@@ -207,7 +207,7 @@
         navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
         window.URL = window.URL || window.webkitURL;
   
-        audio_context = new webkitAudioContext;
+        audio_context = new AudioContext;
         console.log('Audio context set up.');
         console.log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not present!'));
       } catch (e) {
