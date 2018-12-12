@@ -124,25 +124,6 @@
         // Recorder initialised
       },
       startRecording() {
-        try {
-          window.AudioContext = window.AudioContext || window.webkitAudioContext;
-          navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
-          window.URL = window.URL || window.webkitURL;
-    
-          audio_context = new AudioContext;
-          console.log('Audio context set up.');
-          console.log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not present!'));
-        } catch (e) {
-          alert('No web audio support in this browser!');
-        }
-        const that = this;
-        navigator.getUserMedia({
-          audio: true
-        }, function(stream) {
-          that.startUserMedia(stream)
-        }, function(e) {
-          console.log('No live audio input: ' + e);
-        });
         // Clear Recording        
         recorder.clear();
         const au = document.getElementById('reload');
@@ -163,10 +144,9 @@
         this.loader = true;
         // create WAV download link using audio data blob
         this.processRecording();
-        // this.createDownloadLink();
+        this.createDownloadLink();
       },
-      processRecording() {
-        const vm = this;
+      createDownloadLink() {
         const au = document.getElementById('reload');
         au.src = '';
         recorder && recorder.exportWAV(function(blob) {
@@ -175,7 +155,12 @@
         
           au.controls = true;
           au.src = url;
+        });
+      },
+      processRecording() {
+        const vm = this;
 
+        recorder && recorder.exportWAV(function(blob) {
           var reader = new window.FileReader();
           reader.readAsDataURL(blob);
           reader.onloadend = () => {
@@ -204,13 +189,10 @@
               textHTML += `<span class='red'>${vm.textResult.substring(vm.question.length+1, vm.textResult.length)}</span>`;
 
               this.textHTML = textHTML;
-
-              audio_context.close();
             }).catch(error => {
               vm.loader = false;
               vm.resultError = true;
               console.log("ERROR:" + error);
-              audio_context.close();
             })
           }
         });
@@ -221,6 +203,26 @@
     },
     created() {
       this.$emit('update:headtitle', '형성평가');
+      try {
+        window.AudioContext = window.AudioContext || window.webkitAudioContext;
+        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
+        window.URL = window.URL || window.webkitURL;
+  
+        audio_context = new AudioContext;
+        console.log('Audio context set up.');
+        console.log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not present!'));
+      } catch (e) {
+        alert('No web audio support in this browser!');
+      }
+      const that = this;
+      navigator.getUserMedia({
+        audio: true
+      }, function(stream) {
+        that.startUserMedia(stream)
+      }, function(e) {
+        console.log('No live audio input: ' + e);
+      });
+
       this.question = this.$route.query.ctx;
     }
   }
