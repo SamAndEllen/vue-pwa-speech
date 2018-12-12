@@ -144,9 +144,10 @@
         this.loader = true;
         // create WAV download link using audio data blob
         this.processRecording();
-        this.createDownloadLink();
+        // this.createDownloadLink();
       },
-      createDownloadLink() {
+      processRecording() {
+        const vm = this;
         const au = document.getElementById('reload');
         au.src = '';
         recorder && recorder.exportWAV(function(blob) {
@@ -155,12 +156,7 @@
         
           au.controls = true;
           au.src = url;
-        });
-      },
-      processRecording() {
-        const vm = this;
 
-        recorder && recorder.exportWAV(function(blob) {
           var reader = new window.FileReader();
           reader.readAsDataURL(blob);
           reader.onloadend = () => {
@@ -189,10 +185,13 @@
               textHTML += `<span class='red'>${vm.textResult.substring(vm.question.length+1, vm.textResult.length)}</span>`;
 
               this.textHTML = textHTML;
+
+              recorder.clear();
             }).catch(error => {
               vm.loader = false;
               vm.resultError = true;
               console.log("ERROR:" + error);
+              recorder.clear();
             })
           }
         });
