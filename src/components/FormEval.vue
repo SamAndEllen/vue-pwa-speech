@@ -207,7 +207,7 @@
         navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
         window.URL = window.URL || window.webkitURL;
   
-        audio_context = new AudioContext;
+        audio_context = new webkitAudioContext;
         console.log('Audio context set up.');
         console.log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not present!'));
       } catch (e) {
