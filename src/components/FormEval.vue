@@ -232,6 +232,22 @@
           console.log(event);
           console.log('transcript', text);
           this.textResult = text;
+          this.btn = true;
+          this.loader = false;
+          this.result = true;
+
+          // 결과 표시
+          let textHTML = '';
+          for (let i = 0; i < this.question.length; i += 1) {
+            const a = this.question.substring(i, i+1);
+            const b = this.textResult.substring(i, i+1);
+            if (a === b) textHTML += a;
+            else textHTML += `<span class='red'>${b}</span>`;
+          }
+
+          textHTML += `<span class='red'>${this.textResult.substring(this.question.length+1, this.textResult.length)}</span>`;
+
+          this.textHTML = textHTML;
         };
         this.recognition.onspeechend = () => {
           console.log('stopped');
