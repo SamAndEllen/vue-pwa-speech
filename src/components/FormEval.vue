@@ -293,7 +293,7 @@
         console.log('No live audio input: ' + e);
       });
 
-      this.question = this.$route.query.ctx;
+      this.question = (this.$route.query.ctx !== undefined) ? this.$route.query.ctx : '이것은 테스트 문항입니다. 문제를 다시 받아와주세요.';
     }
   }
 </script>
