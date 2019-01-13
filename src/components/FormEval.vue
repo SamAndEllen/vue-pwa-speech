@@ -66,7 +66,7 @@
           ></v-text-field>
         </v-flex>
       </v-layout>
-      </br>
+      <br>
     </v-flex>
   </v-layout>
 </template>
@@ -106,6 +106,8 @@
         synth: window.speechSynthesis,
         voiceList: [],
         speech: new window.SpeechSynthesisUtterance(),
+        recognition: null,
+        listening: false,
       }
     },
     methods: {
@@ -124,27 +126,31 @@
         // Recorder initialised
       },
       startRecording() {
+        this.recognition.start();
+
         // Clear Recording        
-        recorder.clear();
-        const au = document.getElementById('reload');
-        au.src = '';
-        // Start Recording
-        this.result = false;
-        this.resultError = false;
-        recorder && recorder.record();
+        // recorder.clear();
+        // const au = document.getElementById('reload');
+        // au.src = '';
+        // // Start Recording
+        // this.result = false;
+        // this.resultError = false;
+        // recorder && recorder.record();
         this.result = false;
         this.btn = false;
         this.btnStop = true;
-        setTimeout(this.stopRecording, 58000)
+        setTimeout(this.stopRecording, 50000)
       },
       stopRecording() {
-        // Stopped Recording
-        recorder && recorder.stop();
+        this.recognition.stop();
+        console.log(this.recognition);
+        // // Stopped Recording
+        // recorder && recorder.stop();
         this.btnStop = false;
-        this.loader = true;
-        // create WAV download link using audio data blob
-        this.processRecording();
-        this.createDownloadLink();
+        // this.loader = true;
+        // // create WAV download link using audio data blob
+        // this.processRecording();
+        // this.createDownloadLink();
       },
       createDownloadLink() {
         const au = document.getElementById('reload');
@@ -204,6 +210,54 @@
     created() {
       this.$emit('update:headtitle', '형성평가');
       try {
+
+        const Recognition =
+          window.SpeechRecognition || window.webkitSpeechRecognition;
+
+        if (!Recognition) {
+          alert(
+            'Speech Recognition API is not supported in this browser, try chrome'
+          );
+          return;
+        }
+
+        this.recognition = new Recognition();
+        this.recognition.lang = 'ko-KR';
+        this.recognition.continuous = true;
+        this.recognition.interimResults = false;
+        this.recognition.maxAlternatives = 1;
+
+        this.recognition.onresult = event => {
+          const text = event.results[0][0].transcript;
+          console.log(event);
+          console.log('transcript', text);
+          this.textResult = text;
+        };
+        this.recognition.onspeechend = () => {
+          console.log('stopped');
+
+          //this.setState({ show: true });
+        };
+
+        this.recognition.onnomatch = event => {
+          console.log('no match');
+          this.textResult = "인식할 수 없습니다.";
+        };
+
+        this.recognition.onstart = () => {
+          this.listening = true;
+        };
+
+        this.recognition.onend = () => {
+          console.log('end');
+          this.listening = false;
+          this.stopRecording();
+        };
+
+        this.recognition.onerror = event => {
+          console.log('error', event);
+        };
+
         window.AudioContext = window.AudioContext || window.webkitAudioContext;
         navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
         window.URL = window.URL || window.webkitURL;

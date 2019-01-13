@@ -8,7 +8,6 @@
         <v-icon left>mic</v-icon> Recording</v-btn>
       <v-btn v-show="btnStop" @click.native="stopRecording" block round color="error" dark>
         <v-icon left>stop</v-icon> Stop</v-btn>
-      </br>
     </v-flex>
     <v-flex xs4>
     </v-flex>
